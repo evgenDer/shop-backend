@@ -1,0 +1,44 @@
+[
+  {
+    "id": "9781593275846",
+    "title": "Eloquent JavaScript, Second Edition",
+    "price": 15,
+    "count": 3,
+    "description": "JavaScript lies at the heart of almost every modern web application, from social apps to the newest browser-based games. Though simple for beginners to pick up and play with, JavaScript is a flexible, complex language that you can use to build full-scale applications."
+  },
+  {
+    "id": "9781449331818",
+    "title": "Learning JavaScript Design Patterns",
+    "price": 30,
+    "count": 4,
+    "description": "With Learning JavaScript Design Patterns, you'll learn how to write beautiful, structured, and maintainable JavaScript by applying classical and modern design patterns to the language. If you want to keep your code efficient, more manageable, and up-to-date with the latest best practices, this book is for you."
+  },
+  {
+    "id": "9781449365035",
+    "title": "Speaking JavaScript",
+    "price": 20,
+    "count": 1,
+    "description": "Like it or not, JavaScript is everywhere these days-from browser to server to mobile-and now you, too, need to learn the language or dive deeper than you have. This concise book guides you into and through JavaScript, written by a veteran programmer who once found himself in the same position."
+  },
+  {
+    "id": "9781491950296",
+    "title": "Programming JavaScript Applications",
+    "price": 10,
+    "count": 0,
+    "description": "Take advantage of JavaScript's power to build robust web-scale or enterprise applications that are easy to extend and maintain. By applying the design patterns outlined in this practical book, experienced JavaScript developers will learn how to write flexible and resilient code that's easier-yes, easier-to work with as your code base grows."
+  },
+  {
+    "id": "9781449325862",
+    "title": "Git Pocket Guide",
+    "price": 20,
+    "count": 3,
+    "description": "This pocket guide is the perfect on-the-job companion to Git, the distributed version control system. It provides a compact, readable introduction to Git for new users, as well as a reference to common commands and procedures for those of you with Git experience."
+  },
+  {
+    "id": "9781449337711",
+    "title": "Designing Evolvable Web APIs with ASP.NET",
+    "price": 50,
+    "count": 2,
+    "description": "Design and build Web APIs for a broad range of clients—including browsers and mobile devices—that can adapt to change over time. This practical, hands-on guide takes you through the theory and tools you need to build evolvable HTTP services with Microsoft’s ASP.NET Web API framework. In the process, you’ll learn how design and implement a real-world Web API."
+  }
+]
