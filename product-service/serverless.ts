@@ -3,6 +3,8 @@ import type { AWS } from '@serverless/typescript';
 import getProductById from '@functions/getProductById';
 import getProductsList from '@functions/getProductsList';
 
+const { PG_HOST, PG_PORT, PG_DATABASE, PG_USERNAME, PG_PASSWORD } = process.env;
+
 const serverlessConfiguration: AWS = {
   service: 'product-service',
   frameworkVersion: '2',
@@ -12,7 +14,7 @@ const serverlessConfiguration: AWS = {
       includeModules: true,
     },
   },
-  plugins: ['serverless-webpack'],
+  plugins: ['serverless-webpack', 'serverless-dotenv-plugin'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -23,6 +25,11 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      PG_HOST,
+      PG_PORT,
+      PG_DATABASE,
+      PG_USERNAME,
+      PG_PASSWORD,
     },
     lambdaHashingVersion: '20201221',
   },

@@ -30,3 +30,6 @@ Thumbs.db
 
 # Serverless directories
 .serverless
+
+# Env variables
+.env
