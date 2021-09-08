@@ -24,10 +24,12 @@ export const getProductById = async (event) => {
     client = new Client(dbOptions);
     await client.connect();
 
-    const { rows: product } = await client.query(
+    const { rows: products } = await client.query(
       'select p.*, s.count from products p left join stocks s on p.id = s.product_id where p.id=$1',
       [productId]
     );
+
+    const product = products[0];
 
     if (!product) {
       return formatJSONResponse({

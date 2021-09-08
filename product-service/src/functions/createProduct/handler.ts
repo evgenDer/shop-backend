@@ -9,7 +9,7 @@ import { dbOptions } from '../../dbOptions';
 import schema from './schema';
 
 export const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
-  console.log('Event', event, 'Body:', event.body);
+  console.log('Event', event);
 
   let client;
 
@@ -17,7 +17,8 @@ export const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = 
     const { title, description, price, count } = event.body;
     
     console.log(title, description, price, count);
-    if (!title || !price) {
+
+    if (!title || price < 0 || count < 0) {
       return formatJSONResponse({
         message: 'Bad request',
       }, 400);
