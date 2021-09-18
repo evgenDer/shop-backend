@@ -1,5 +1,7 @@
 import type { AWS } from '@serverless/typescript';
 
+import importProductsFile from '@functions/importProductsFile';
+import importFileParser from '@functions/importFileParser';
 import { BUCKET, REGION } from '@constants/aws';
 
 const serverlessConfiguration: AWS = {
@@ -37,6 +39,7 @@ const serverlessConfiguration: AWS = {
       },
     ],
   },
+  functions: { importFileParser, importProductsFile },
 };
 
 module.exports = serverlessConfiguration;
