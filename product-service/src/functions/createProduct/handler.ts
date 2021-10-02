@@ -1,22 +1,18 @@
 import 'source-map-support/register';
 
-import { Client } from 'pg';
-
 import { formatJSONResponse, ValidatedEventAPIGatewayProxyEvent } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
+import { DatabaseService } from '@services/database';
 
-import { dbOptions } from '../../dbOptions';
 import schema from './schema';
 
 export const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   console.log('Event', event);
 
-  let client;
+  let dbService;
 
   try {
     const { title, description, price, count } = event.body;
-    
-    console.log(title, description, price, count);
 
     if (!title || price < 0 || count < 0) {
       return formatJSONResponse({
@@ -24,42 +20,26 @@ export const createProduct: ValidatedEventAPIGatewayProxyEvent<typeof schema> = 
       }, 400);
     }
 
-    client = new Client(dbOptions);
-    await client.connect();
+    dbService = new DatabaseService();
+    await dbService.connect();
 
-    await client.query('BEGIN');
+    await dbService.startTransaction();
 
-    const { rows: responseProducts } = await client.query(
-      'insert into products(title, description, price) values ($1, $2, $3) returning id',
-      [title, description, price]
-    );
+    const product = await dbService.createProduct(title, description, price, count);
 
-    const { id } = responseProducts[0];
-
-    await client.query(
-      'insert into stocks(product_id, count) values ($1, $2)',
-      [id, count]
-    );
-
-    await client.query('COMMIT');
-    return formatJSONResponse({
-      id,
-      title,
-      description,
-      price,
-    }, 201);
+    await dbService.commitTransaction();
+    
+    return formatJSONResponse(product, 201);
   } catch (error) {
     console.log(error);
 
-    await client.query('ROLLBACK');
+    await dbService.rollbackTransaction();;
 
     return formatJSONResponse({
       message: 'Internal server error',
     }, 500);
   } finally {
-    if (client) {
-      client.end();
-    }
+    dbService?.disconnect();
   }
 }
 
