@@ -2,7 +2,7 @@ import type { AWS } from '@serverless/typescript';
 
 import importProductsFile from '@functions/importProductsFile';
 import importFileParser from '@functions/importFileParser';
-import { BUCKET, REGION } from '@constants/aws';
+import { BUCKET, PRODUCT_SERVICE, REGION } from '@constants/aws';
 
 const serverlessConfiguration: AWS = {
   service: 'import-service',
@@ -24,6 +24,7 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      SQS_URL: `\${cf:${PRODUCT_SERVICE}-\${self:provider.stage}.catalogItemsQueueUrl}`,
     },
     lambdaHashingVersion: '20201221',
     iamRoleStatements: [
@@ -36,6 +37,11 @@ const serverlessConfiguration: AWS = {
         Effect: 'Allow',
         Action: 's3:*',
         Resource: `arn:aws:s3:::${BUCKET}/*`,
+      },
+      {
+        Effect: 'Allow',
+        Action: 'sqs:*',
+        Resource: `\${cf:${PRODUCT_SERVICE}-\${self:provider.stage}.createProductTopicArn}`,
       },
     ],
   },

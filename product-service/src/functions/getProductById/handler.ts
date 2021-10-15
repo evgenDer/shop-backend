@@ -1,14 +1,11 @@
 import 'source-map-support/register';
 
-import { Client } from 'pg';
-
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
-
-import { dbOptions } from '../../dbOptions';
+import { DatabaseService } from '@services/database';
 
 export const getProductById = async (event) => {
-  let client;
+  let dbService;
 
   try {
     const { productId } = event.pathParameters;
@@ -21,15 +18,10 @@ export const getProductById = async (event) => {
       }, 400);
     }
 
-    client = new Client(dbOptions);
-    await client.connect();
+    dbService = new DatabaseService();
+    await dbService.connect();
 
-    const { rows: products } = await client.query(
-      'select p.*, s.count from products p left join stocks s on p.id = s.product_id where p.id=$1',
-      [productId]
-    );
-
-    const product = products[0];
+    const product = await dbService.getProductById(productId);
 
     if (!product) {
       return formatJSONResponse({
@@ -47,9 +39,7 @@ export const getProductById = async (event) => {
       message: 'Internal server error',
     }, 500);
   } finally {
-    if (client) {
-      client.end();
-    }
+    dbService?.disconnect();
   }
 }
 

@@ -1,7 +1,7 @@
 import 'source-map-support/register';
 
 import * as AWS from 'aws-sdk';
-import * as csv from 'csv-parser';
+import csv from 'csv-parser';
 
 import { formatJSONResponse } from '@libs/apiGateway';
 import { middyfy } from '@libs/lambda';
@@ -10,6 +10,7 @@ import { BUCKET, PREFIX_PARSED, PREFIX_UPLOADED, REGION } from '@constants/aws';
 export const importFileParser = async (event) => {
   try {
     const s3 = new AWS.S3({ region: REGION });
+    const sqs = new AWS.SQS({ region: REGION });
     
     for (const record of event.Records) {
       const filePath = record.s3.object.key;
@@ -21,8 +22,13 @@ export const importFileParser = async (event) => {
 
       s3Stream
         .pipe(csv())
-        .on('data', (data) => {
-          console.log(data);
+        .on('data', async (data) => {
+          await sqs.sendMessage({
+            QueueUrl: process.env.SQS_URL,
+            MessageBody: JSON.stringify(data),
+          }).promise();
+
+          console.log('Send message: ', data);
         })
         .on('error', () => {
           throw new Error('Error occurred during csv parser');
@@ -41,9 +47,7 @@ export const importFileParser = async (event) => {
         });
     }
 
-    return formatJSONResponse({
-      message: 'Accepted',
-    }, 202);
+    return formatJSONResponse({ message: 'Accepted' }, 202);
   } catch(error) {
     console.error(error);
 
