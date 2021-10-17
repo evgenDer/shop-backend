@@ -7,3 +7,4 @@ export const PREFIX_PARSED = 'parsed';
 export const EXPIRES_SEC = 60;
 
 export const PRODUCT_SERVICE = 'product-service';
+export const AUTHORIZATION_SERVICE = 'authorization-service';
